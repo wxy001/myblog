@@ -55,20 +55,39 @@ const serverHandle = (req, res) => {
         req.body = postData;
         
         // 处理 blog 路由
-        const blogData = handleBlogRouter(req, res);
-        if (blogData) {
-            res.end(
-                JSON.stringify(blogData)//将对象转换为JSON格式的字符串
-            )
-            return; 
+        // const blogData = handleBlogRouter(req, res);
+        // if (blogData) {
+        //     res.end(
+        //         JSON.stringify(blogData)//将对象转换为JSON格式的字符串
+        //     )
+        //     return; 
+        // }
+        const blogResult = handleBlogRouter(req, res);// 返回的是promise对象
+        if (blogResult) {
+            blogResult.then(blogData => {
+                res.end(
+                    JSON.stringify(blogData)//将对象转换为JSON格式的字符串
+                )
+            }).catch(err => {
+                res.end(
+                    JSON.stringify(err)//将对象转换为JSON格式的字符串
+                )
+            })
+            return;
         }
 
         // 处理 user 路由
-        const userData = handleUserRouter(req, res)
-        if (userData) {
-            res.end(
-                JSON.stringify(userData)//将对象转换为JSON格式的字符串
-            )
+        const userResult = handleUserRouter(req, res);// 返回的是promise对象
+        if (userResult) {
+            userResult.then(userData => {
+                res.end(
+                    JSON.stringify(userData)//将对象转换为JSON格式的字符串
+                )
+            }).catch(err => {
+                res.end(
+                    JSON.stringify(err)//将对象转换为JSON格式的字符串
+                )
+            })
             return; 
         }
         
